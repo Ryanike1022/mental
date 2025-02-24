@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chat with Mira</title>
+
+</head>
+
+<body>
+
+    <h1>Chat with Mira</h1>
+
+    <div id="chat"></div>
+
+    <input type="text" id="userInput" placeholder="Type your message here...">
+
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+
+        let sessionId = 'new_session';
+
+        function sendMessage() {
+
+            const userInput = document.getElementById('userInput').value;
+
+            fetch('https://your-heroku-app.herokuapp.com/chat', {
+
+                method: 'POST',
+
+                headers: {
+
+                    'Content-Type': 'application/json',
+
+                },
+
+                body: JSON.stringify({ message: userInput, session_id: sessionId }),
+
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                sessionId = data.session_id;
+
+                const chatDiv = document.getElementById('chat');
+
+                chatDiv.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+                chatDiv.innerHTML += `<p><strong>Mira:</strong> ${data.response}</p>`;
+
+                document.getElementById('userInput').value = '';
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
